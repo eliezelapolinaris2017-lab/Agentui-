@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Agent UI — Control Center</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">AI</div>
+        <div class="brandText">
+          <div class="brandName">Agent UI</div>
+          <div class="brandSub">Control Center</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="navBtn active" data-tab="ops">Operaciones</button>
+        <button class="navBtn" data-tab="tools">Herramientas</button>
+        <button class="navBtn" data-tab="settings">Ajustes</button>
+      </nav>
+
+      <div class="sidebarFooter">
+        <div class="chip" id="agentStatusChip">● Online</div>
+        <button class="btn ghost" id="btnReset">Reset</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpiLabel">Tareas</div>
+            <div class="kpiValue" id="kpiTasks">0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpiLabel">Pendientes</div>
+            <div class="kpiValue" id="kpiPending">0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpiLabel">Completadas</div>
+            <div class="kpiValue" id="kpiDone">0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpiLabel">Logs</div>
+            <div class="kpiValue" id="kpiLogs">0</div>
+          </div>
+        </div>
+
+        <div class="topActions">
+          <button class="btn" id="btnNewTask">+ Nueva tarea</button>
+          <button class="btn primary" id="btnRunAgent">Ejecutar agente</button>
+        </div>
+      </header>
+
+      <!-- Tabs -->
+      <section class="tabs">
+
+        <!-- OPERACIONES -->
+        <div class="tab active" id="tab-ops">
+          <div class="grid2">
+            <!-- Chat -->
+            <section class="card">
+              <div class="cardHeader">
+                <h2>Chat</h2>
+                <div class="muted">Comandos: <code>/task</code> <code>/done</code> <code>/clear</code></div>
+              </div>
+
+              <div class="chat" id="chat"></div>
+
+              <form class="chatInput" id="chatForm">
+                <input id="chatText" type="text" placeholder="Dile al agente qué quieres lograr…" autocomplete="off" />
+                <button class="btn primary" type="submit">Enviar</button>
+              </form>
+            </section>
+
+            <!-- Task Board -->
+            <section class="card">
+              <div class="cardHeader">
+                <h2>Task Board</h2>
+                <div class="muted">Backlog → En progreso → Hecho</div>
+              </div>
+
+              <div class="board">
+                <div class="col">
+                  <div class="colTitle">Backlog</div>
+                  <div class="colBody" id="colBacklog"></div>
+                </div>
+                <div class="col">
+                  <div class="colTitle">En progreso</div>
+                  <div class="colBody" id="colDoing"></div>
+                </div>
+                <div class="col">
+                  <div class="colTitle">Hecho</div>
+                  <div class="colBody" id="colDone"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Logs -->
+          <section class="card">
+            <div class="cardHeader">
+              <h2>Logs</h2>
+              <div class="row">
+                <button class="btn ghost" id="btnExport">Exportar JSON</button>
+                <button class="btn ghost" id="btnClearLogs">Limpiar logs</button>
+              </div>
+            </div>
+
+            <div class="logs" id="logs"></div>
+          </section>
+        </div>
+
+        <!-- HERRAMIENTAS -->
+        <div class="tab" id="tab-tools">
+          <section class="card">
+            <div class="cardHeader">
+              <h2>Herramientas conectables</h2>
+              <div class="muted">Aquí defines qué “puede” hacer el agente.</div>
+            </div>
+
+            <div class="toolGrid">
+              <label class="tool">
+                <input type="checkbox" id="toolCalendar" checked />
+                <div>
+                  <div class="toolName">Calendario</div>
+                  <div class="muted">Crear / mover citas (placeholder)</div>
+                </div>
+              </label>
+
+              <label class="tool">
+                <input type="checkbox" id="toolSheets" checked />
+                <div>
+                  <div class="toolName">Sheets</div>
+                  <div class="muted">Guardar registros / KPIs (placeholder)</div>
+                </div>
+              </label>
+
+              <label class="tool">
+                <input type="checkbox" id="toolPDF" checked />
+                <div>
+                  <div class="toolName">PDF</div>
+                  <div class="muted">Generar reportes (placeholder)</div>
+                </div>
+              </label>
+
+              <label class="tool">
+                <input type="checkbox" id="toolWhatsApp" />
+                <div>
+                  <div class="toolName">WhatsApp</div>
+                  <div class="muted">Mensajes automatizados (placeholder)</div>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="cardHeader">
+              <h2>Acciones rápidas</h2>
+              <div class="muted">Simulan “tools calls”.</div>
+            </div>
+
+            <div class="rowWrap">
+              <button class="btn" data-action="simulate-calendar">Simular cita</button>
+              <button class="btn" data-action="simulate-sheet">Simular registro</button>
+              <button class="btn" data-action="simulate-pdf">Simular PDF</button>
+              <button class="btn" data-action="simulate-whatsapp">Simular WhatsApp</button>
+            </div>
+          </section>
+        </div>
+
+        <!-- AJUSTES -->
+        <div class="tab" id="tab-settings">
+          <section class="card">
+            <div class="cardHeader">
+              <h2>Ajustes del agente</h2>
+              <div class="muted">Define el “modo de operación”.</div>
+            </div>
+
+            <div class="settingsGrid">
+              <label class="field">
+                <span>Nombre del agente</span>
+                <input id="agentName" type="text" placeholder="Ej: Oasis Agent" />
+              </label>
+
+              <label class="field">
+                <span>Personalidad (brief)</span>
+                <input id="agentBrief" type="text" placeholder="Ej: directo, técnico, orientado a resultados" />
+              </label>
+
+              <label class="field">
+                <span>Auto-ejecución</span>
+                <select id="agentAutoRun">
+                  <option value="off">Off</option>
+                  <option value="on">On</option>
+                </select>
+              </label>
+
+              <button class="btn primary" id="btnSaveSettings">Guardar ajustes</button>
+            </div>
+
+            <div class="hint">
+              Tip: Esto es UI. El “cerebro” real se conecta luego por API. Hoy mandamos, mañana facturamos. 🙂
+            </div>
+          </section>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal Nueva Tarea -->
+  <div class="modal" id="modal">
+    <div class="modalCard">
+      <div class="modalHeader">
+        <h3>Nueva tarea</h3>
+        <button class="btn ghost" id="btnCloseModal">Cerrar</button>
+      </div>
+
+      <form id="taskForm" class="modalBody">
+        <label class="field">
+          <span>Título</span>
+          <input id="taskTitle" type="text" required placeholder="Ej: Preparar cotización de mantenimiento" />
+        </label>
+
+        <label class="field">
+          <span>Prioridad</span>
+          <select id="taskPriority">
+            <option value="P3">P3 - Normal</option>
+            <option value="P2">P2 - Alta</option>
+            <option value="P1">P1 - Crítica</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Notas</span>
+          <textarea id="taskNotes" rows="3" placeholder="Detalles, cliente, fecha, etc."></textarea>
+        </label>
+
+        <button class="btn primary" type="submit">Crear tarea</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
